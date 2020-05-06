@@ -6,32 +6,21 @@ const { execute, makePromise } = require('apollo-link')
 const { createHttpLink } = require('apollo-link-http')
 
 const hasuraUri = process.env.HASURA_URI || 'http://localhost:8090';
-const allowedSdl = path.resolve(__dirname, 'operations', 'allowed.graphql');
-const disallowedSdl = path.resolve(__dirname, 'operations', 'disallowed.graphql');
+const allowed = path.resolve(__dirname, 'operations', 'allowed.graphql');
+const disallowed = path.resolve(__dirname, 'operations', 'disallowed.graphql');
 
-async function loadQueryNode (filePath) {
-  return gql`${await fs.promises.readFile(filePath)}`
-}
-
-function print(result) {
-  console.log(JSON.stringify(result, null, 2))
-}
-
-async function runBothQueries() {
-    const httpLink = createHttpLink({
+async function executeQuery (filePath) {
+    const link = createHttpLink({
         uri: `${hasuraUri}/v1/graphql`,
         fetch
-    })
-    try {
-        print(await makePromise(execute(httpLink, {
-            query: await loadQueryNode(allowedSdl)
-        })))
-        print(await makePromise(execute(httpLink, {
-            query: await loadQueryNode(disallowedSdl)
-        })))
-    } catch (error) {
-        console.error(error)
-    }
+    });
+    const result = await makePromise(execute(link, {
+        query: gql`${await fs.promises.readFile(filePath)}`
+    }));
+    console.log(JSON.stringify(result, null, 2))
 }
 
-runBothQueries()
+executeQuery(allowed)
+    .then(() => executeQuery(disallowed))
+    .catch(error => console.error(error))
+
