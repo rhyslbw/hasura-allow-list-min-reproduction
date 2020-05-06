@@ -1,4 +1,9 @@
 See [issue](https://github.com/hasura/graphql-engine/issues/4687)
+# Setup 
+```
+docker-compose up -d
+```
+
 ## Expected 
 ```
 $ yarn start
@@ -32,8 +37,6 @@ $ yarn start
 ```
 ## Actual
 ```
-
-$ docker-compose up -d
 $ yarn start
 
 {
