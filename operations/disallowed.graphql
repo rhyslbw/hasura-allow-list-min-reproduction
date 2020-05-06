@@ -1,0 +1,6 @@
+query disallowed {
+  foo {
+    id
+    created_at
+  }
+}

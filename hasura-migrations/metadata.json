@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "tables": [
+    {
+      "table": {
+        "schema": "public",
+        "name": "foo"
+      },
+      "select_permissions": [
+        {
+          "role": "public",
+          "permission": {
+            "columns": [
+              "id",
+              "created_at"
+            ],
+            "filter": {}
+          }
+        }
+      ]
+    }
+  ],
+  "query_collections": [
+    {
+      "name": "allowed-queries",
+      "definition": {
+        "queries": [
+          {
+            "name": "allowed",
+            "query": "query allowed {\n  foo {\n    id\n  }\n}"
+          }
+        ]
+      }
+    }
+  ],
+  "allowlist": [
+    {
+      "collection": "allowed-queries"
+    }
+  ]
+}
